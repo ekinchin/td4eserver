@@ -1,3 +1,6 @@
-const helloString: string = 'Hello World';
+/* eslint-disable import/extensions */
+/* eslint-disable no-console */
+import createServer from './server';
+import routing from './routing';
 
-console.log(helloString);
+createServer(routing);
