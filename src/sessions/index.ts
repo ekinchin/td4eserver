@@ -19,9 +19,7 @@ class SessionsClass {
   constructor(database: sessionDBType) { this.DB = database; }
 
   async find(id: string) : Promise<sessionType> {
-    const token: sessionType = this.DB[id];
-    if (!token) return Promise.reject(new Error('Token not found'));
-    return token;
+    return this.DB[id] || Promise.reject(new Error('Token not found'));
   }
 
   async add(username: string) : Promise<sessionType> {
@@ -36,8 +34,7 @@ class SessionsClass {
       .then((session) => {
         delete this.DB[id];
         return session;
-      })
-      .catch((err) => Promise.reject(err));
+      });
   }
 }
 
