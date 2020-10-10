@@ -1,5 +1,7 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import https from 'https';
+// import https from 'https';
+import http from 'http';
 import fs from 'fs';
 import path from 'path';
 
@@ -8,7 +10,7 @@ const PORT: string | number = process.env.PORT || DEFAULT_PORT;
 
 const DEFAULT_CERT_DIR: string = './cert';
 
-interface CERTIFICATE {
+type CERTIFICATE = {
   key: string,
   cert: string,
   ca: string,
@@ -33,7 +35,8 @@ const readCertificate = (dir: string) : CERTIFICATE => {
 };
 
 const createServer = (ondata: (request: any, response: any, data: any) => void) => {
-  https.createServer(readCertificate(DEFAULT_CERT_DIR))
+  // https.createServer(readCertificate(DEFAULT_CERT_DIR))
+  http.createServer()
     .listen(PORT)
     .on('listen', () => {
       console.log(`server running on port ${PORT}`);
