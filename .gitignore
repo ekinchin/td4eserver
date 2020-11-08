@@ -1,6 +1,7 @@
 /node_modules/
-/dist/
+/build/
 /.vscode/
 /cert/
 tsconfig.tsbuildinfo
 history.json
+.dockerignore
