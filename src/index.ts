@@ -1,6 +1,6 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-console */
 import createServer from './server';
-import routing from './api/routing';
+import api from './api';
 
-createServer(routing);
+createServer(api);
