@@ -1,6 +1,5 @@
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable import/extensions */
-/* eslint-disable no-console */
 import fs from 'fs';
 // eslint-disable-next-line no-unused-vars
 import Sessions, { sessionType } from '../sessions';
@@ -36,8 +35,16 @@ const checkSession = async (id: string)
 
 const api:apiType = apiLoad();
 
+const methodError = async (request: any, response: any) => {
+  response.statusCode = 400;
+  response.setHeader('Content-Type', 'application/json');
+  response.write(JSON.stringify({ 400: 'POST method expected' }));
+  response.end();
+};
+
 const routing = async (request: any, response: any, data: any): Promise<any> => {
-  const { url, headers } = request;
+  const { method, url, headers } = request;
+  if (method !== 'POST') return methodError(request, response);
   const { session } = headers;
   // определение наличия валидной сессии
   const sessionIsValid: boolean = await checkSession(session);
