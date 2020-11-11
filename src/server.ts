@@ -45,6 +45,8 @@ const createServer = (ondata: (request: any, response: any, data: any) => void) 
       console.error(err);
     })
     .on('request', (request, response) => {
+      const { url } = request;
+      if (!url.startsWith('/api/')) return;
       let data: string = '';
       request.on('data', (chunk: string) => { data += chunk; });
       request.on('end', () => {
