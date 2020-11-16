@@ -1,25 +1,25 @@
 /* eslint-disable import/extensions */
 // eslint-disable-next-line no-unused-vars
-// import storage from '../storage';
-
-export type userType = {
-  username: string,
-  password: string,
-  permissions: Array<string>
-}
-
-type userDBType = {[index: string]: userType};
+import type { userType, userDBType } from '../types';
 
 const userDB: userDBType = {};
 
 class UsersClass {
-  DB : userDBType
+  DB: userDBType;
 
-  constructor(database: userDBType) { this.DB = database; }
+  constructor(database: userDBType) {
+    this.DB = database;
+  }
 
-  async find(username: string) : Promise<userType> { return this.DB[username] || Promise.reject(Error('User not found')); }
+  async find(username: string): Promise<userType> {
+    return this.DB[username] || Promise.reject(Error('User not found'));
+  }
 
-  async add(username: string, password: string, permissions: Array<string>) : Promise<userType> {
+  async add(
+    username: string,
+    password: string,
+    permissions: Array<string>,
+  ): Promise<userType> {
     if (!this.DB[username]) {
       this.DB[username] = { username, password, permissions };
       return this.find(username);
@@ -27,12 +27,11 @@ class UsersClass {
     throw new Error('User already exists');
   }
 
-  async delete(username: string) : Promise<userType> {
-    return this.find(username)
-      .then((user) => {
-        delete this.DB[username];
-        return user;
-      });
+  async delete(username: string): Promise<userType> {
+    return this.find(username).then((user) => {
+      delete this.DB[username];
+      return user;
+    });
   }
 
   async update(
@@ -40,7 +39,7 @@ class UsersClass {
     username?: string,
     password?: string,
     permissions?: Array<string>,
-  ) : Promise<userType> {
+  ): Promise<userType> {
     return this.find(oldUsername)
       .then((user) => this.delete(user.username))
       .then((user) => this.add(

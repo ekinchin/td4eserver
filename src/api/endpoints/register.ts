@@ -1,5 +1,7 @@
 /* eslint-disable import/extensions */
-import Users, { userType } from '../../users';
+import Users from '../../users';
+// eslint-disable-next-line no-unused-vars
+import type { userType } from '../../users';
 
 const register = async (request: any, response: any, data: any) => {
   const { headers } = request;

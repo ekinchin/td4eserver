@@ -1,12 +1,13 @@
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable import/extensions */
 import fs from 'fs';
+import Sessions from '../sessions';
 // eslint-disable-next-line no-unused-vars
-import Sessions, { sessionType } from '../sessions';
+import type { sessionType } from '../types';
 
 const API_DIR = './build/api/endpoints';
 
-type apiType = {[index: string]: any};
+type apiType = {[index: string]: any, };
 
 const apiLoad = () => {
   const files = fs.readdirSync(API_DIR);
@@ -22,16 +23,15 @@ const apiLoad = () => {
   }, {});
 };
 
-const checkSession = async (id: string)
-  : Promise<boolean> => Sessions.find(id)
-  .then((session: sessionType) => {
-    if (Date.now() > session.dateOfExpiry) {
-      Sessions.delete(id);
-      return false;
-    }
-    return true;
-  })
-  .catch(() => false);
+const checkSession = async (id: string): Promise<any> => {
+  let session: sessionType;
+  try {
+    session = await Sessions.find(id);
+  } catch (error) {
+    return false;
+  }
+  return !((Date.now() > session.dateOfExpiry));
+};
 
 const api:apiType = apiLoad();
 
@@ -52,6 +52,7 @@ const routing = async (request: any, response: any, data: any): Promise<any> => 
   if (!sessionIsValid && url !== '/api/register' && url !== '/api/auth') {
     endpoint = '/api/unauthorization';
   } else {
+    // eslint-disable-next-line no-prototype-builtins
     endpoint = api.hasOwnProperty(url) ? url : '/api/notfound';
   }
   return api[endpoint](request, response, data);
