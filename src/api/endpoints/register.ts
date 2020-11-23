@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 import Users from '../../users';
 // eslint-disable-next-line no-unused-vars
-import type { userType } from '../../users';
+import type { userType } from '../../types';
 
 const register = async (request: any, response: any, data: any) => {
   const { headers } = request;
@@ -25,7 +25,7 @@ const register = async (request: any, response: any, data: any) => {
   }
   try {
     const { username, password } = dataJSON;
-    const user: userType = await Users.add(username, password, ['default']);
+    const user: userType = await Users.add(username, password);
     response.statusCode = 200;
     response.setHeader('Content-Type', 'application/json');
     response.write(JSON.stringify({ 200: JSON.stringify(user) }));
