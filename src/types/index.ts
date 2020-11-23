@@ -9,7 +9,11 @@ export type sessionDBType = { [index: string]: sessionType };
 export type userType = {
   username: string,
   password: string,
-  permissions: Array<string>
+  permissions: {allow: Array<string>, deny: Array<string>}
 }
 
-export type userDBType = {[index: string]: userType};
+export type noteType = {
+  id: string,
+  date: string,
+  text: string,
+}
