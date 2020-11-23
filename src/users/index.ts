@@ -1,55 +1,56 @@
 /* eslint-disable import/extensions */
 // eslint-disable-next-line no-unused-vars
-import type { userType, userDBType } from '../types';
-
-const userDB: userDBType = {};
+import type { userType } from '../types';
+import Storage from '../storage';
+// eslint-disable-next-line no-unused-vars
+import { IStorage } from '../interfaces/storage';
 
 class UsersClass {
-  DB: userDBType;
+  DB: IStorage;
 
-  constructor(database: userDBType) {
+  constructor(database: IStorage) {
     this.DB = database;
   }
 
   async find(username: string): Promise<userType> {
-    return this.DB[username] || Promise.reject(Error('User not found'));
+    return JSON.parse(await this.DB.read('username', username)) || Promise.reject(Error('User not found'));
   }
 
   async add(
     username: string,
     password: string,
-    permissions: Array<string>,
   ): Promise<userType> {
-    if (!this.DB[username]) {
-      this.DB[username] = { username, password, permissions };
-      return this.find(username);
-    }
-    throw new Error('User already exists');
+    const user: userType = {
+      username, password, permissions: { allow: [''], deny: [''] },
+    };
+    await this.DB.create(JSON.stringify(user));
+    return user;
   }
 
-  async delete(username: string): Promise<userType> {
-    return this.find(username).then((user) => {
-      delete this.DB[username];
-      return user;
-    });
-  }
+  // async delete(username: string): Promise<userType> {
+  //   return this.find(username).then((user) => {
+  //     delete this.DB[username];
+  //     return user;
+  //   });
+  // }
 
-  async update(
-    oldUsername: string,
-    username?: string,
-    password?: string,
-    permissions?: Array<string>,
-  ): Promise<userType> {
-    return this.find(oldUsername)
-      .then((user) => this.delete(user.username))
-      .then((user) => this.add(
-        username || user.username,
-        password || user.password,
-        permissions || user.permissions,
-      ));
-  }
+  // async update(
+  //   oldUsername: string,
+  //   username?: string,
+  //   password?: string,
+  //   permissions?: Array<string>,
+  // ): Promise<userType> {
+  //   return this.find(oldUsername)
+  //     .then((user) => this.delete(user.username))
+  //     .then((user) => this.add(
+  //       username || user.username,
+  //       password || user.password,
+  //       permissions || user.permissions,
+  //     ));
+  // }
 }
 
-const Users = new UsersClass(userDB);
+const database = new Storage('user');
+const Users = new UsersClass(database);
 
 export default Users;
