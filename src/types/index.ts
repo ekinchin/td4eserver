@@ -1,15 +1,22 @@
-export type sessionType = {
-  id: string;
-  username: string;
-  dateOfExpiry: number;
+export type TSession = {
+  id: string,
+  username: string,
+  dateOfExpiry: number,
 };
 
-export type sessionDBType = { [index: string]: sessionType };
-
-export type userType = {
+export type TUser = {
   username: string,
   password: string,
-  permissions: Array<string>
+  permissions: {allow: Array<string>, deny: Array<string>},
 }
 
-export type userDBType = {[index: string]: userType};
+export type TNote = {
+  id: string,
+  date: string,
+  text: string,
+}
+
+export type TError = {
+  code: number,
+  message: string,
+}

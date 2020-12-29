@@ -1,55 +1,44 @@
 /* eslint-disable import/extensions */
 // eslint-disable-next-line no-unused-vars
-import type { userType, userDBType } from '../types';
+import type { TUser, TError } from '../types';
+import Storage from '../storage';
+// eslint-disable-next-line no-unused-vars
+import { IStorage } from '../interfaces/storage';
+// eslint-disable-next-line no-unused-vars
+import { IUser } from '../interfaces/users';
 
-const userDB: userDBType = {};
+class UsersClass implements IUser {
+  storage: IStorage<TUser>;
 
-class UsersClass {
-  DB: userDBType;
-
-  constructor(database: userDBType) {
-    this.DB = database;
+  constructor(database: IStorage<TUser>) {
+    this.storage = database;
   }
 
-  async find(username: string): Promise<userType> {
-    return this.DB[username] || Promise.reject(Error('User not found'));
+  async find(username: string): Promise<{result?: Array<TUser>, error?: TError}> {
+    const { result, error } = await this.storage.read('username', username);
+    return { result, error };
   }
 
-  async add(
-    username: string,
-    password: string,
-    permissions: Array<string>,
-  ): Promise<userType> {
-    if (!this.DB[username]) {
-      this.DB[username] = { username, password, permissions };
-      return this.find(username);
+  async add(username: string, password: string): Promise<{result?: TUser, error?: TError}> {
+    const user: TUser = {
+      username, password, permissions: { allow: [''], deny: [''] },
+    };
+    const { result, error } = await this.storage.create(JSON.stringify(user));
+    return { result, error };
+  }
+
+  async delete(username: string): Promise<{result?: TUser, error?: TError}> {
+    const existUsers: {result?: Array<TUser>, error?: TError} = await this.find(username);
+    if (existUsers) {
+      const { result, error } = await this.storage.delete('username', username);
+      return { result, error };
     }
-    throw new Error('User already exists');
-  }
-
-  async delete(username: string): Promise<userType> {
-    return this.find(username).then((user) => {
-      delete this.DB[username];
-      return user;
-    });
-  }
-
-  async update(
-    oldUsername: string,
-    username?: string,
-    password?: string,
-    permissions?: Array<string>,
-  ): Promise<userType> {
-    return this.find(oldUsername)
-      .then((user) => this.delete(user.username))
-      .then((user) => this.add(
-        username || user.username,
-        password || user.password,
-        permissions || user.permissions,
-      ));
+    const error :TError = { message: 'user not exists', code: 1 };
+    return { error };
   }
 }
 
-const Users = new UsersClass(userDB);
+const database = new Storage<TUser>('User');
+const Users = new UsersClass(database);
 
 export default Users;

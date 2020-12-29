@@ -3,7 +3,7 @@
 import fs from 'fs';
 import Sessions from '../sessions';
 // eslint-disable-next-line no-unused-vars
-import type { sessionType } from '../types';
+import type { TSession } from '../types';
 
 const API_DIR = './build/api/endpoints';
 
@@ -23,13 +23,10 @@ const apiLoad = () => {
   }, {});
 };
 
-const checkSession = async (id: string): Promise<any> => {
-  let session: sessionType;
-  try {
-    session = await Sessions.find(id);
-  } catch (error) {
-    return false;
-  }
+const checkSession = async (id: string): Promise<boolean> => {
+  const sessions = await Sessions.find(id);
+  if (!sessions.result) return false;
+  const session = sessions.result[0];
   return !((Date.now() > session.dateOfExpiry));
 };
 
@@ -49,7 +46,7 @@ const routing = async (request: any, response: any, data: any): Promise<any> => 
   // определение наличия валидной сессии
   const sessionIsValid: boolean = await checkSession(session);
   let endpoint: string = '';
-  if (!sessionIsValid && url !== '/api/register' && url !== '/api/auth') {
+  if (!sessionIsValid && url !== '/api/register' && url !== '/api/auth' && url !== '/api/userlist') {
     endpoint = '/api/unauthorization';
   } else {
     // eslint-disable-next-line no-prototype-builtins
