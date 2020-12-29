@@ -4,11 +4,6 @@
 import Sessions from '../../sessions';
 
 const unauth = async (request: any, response: any) => {
-  const { headers } = request;
-  const { session } = headers;
-  Sessions.find(session)
-    .then((client) => Sessions.delete(client.id))
-    .catch(() => {});
   response.statusCode = 200;
   response.end();
 };

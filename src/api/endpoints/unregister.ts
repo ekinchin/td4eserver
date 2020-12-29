@@ -26,14 +26,14 @@ const register = async (request: any, response: any, data: any) => {
   try {
     const { username, password } = dataJSON;
     const exists = await Users.find(username);
-    if (exists.result) {
+    if (!exists.result) {
       response.statusCode = 200;
       response.setHeader('Content-Type', 'application/json');
-      response.write(JSON.stringify({ 200: JSON.stringify('user already exists') }));
+      response.write(JSON.stringify({ 200: JSON.stringify('user is not exists') }));
       response.end();
       return;
     }
-    const user = await Users.add(username, password);
+    const user = await Users.delete(username);
     response.statusCode = 200;
     response.setHeader('Content-Type', 'application/json');
     response.write(JSON.stringify({ 200: JSON.stringify(user.result) }));

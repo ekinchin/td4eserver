@@ -5,8 +5,12 @@ import Sessions from '../../sessions';
 
 const checkAuthorization = async (username: string, password: string)
 : Promise<boolean> => Users.find(username)
-  .then((user) => user.password === password)
-  .catch(() => false);
+  .then((users) => {
+    const { result, error } = users;
+    if (!result || error) return false;
+    const user = result[0];
+    return password === user.password;
+  });
 
 const auth = async (request: any, response: any) => {
   const { headers } = request;
