@@ -1,35 +1,39 @@
 /* eslint-disable import/extensions */
-import crypto from 'crypto';
+import Storage from '../storage';
 // eslint-disable-next-line no-unused-vars
-import type { sessionDBType, sessionType } from '../types';
+import type { IStorage } from '../interfaces/storage';
+// eslint-disable-next-line no-unused-vars
+import type { ISessions } from '../interfaces/sessions';
+// eslint-disable-next-line no-unused-vars
+import type { TSession, TError } from '../types';
 
-const tokenDB: sessionDBType = {};
-class SessionsClass {
-  DB: sessionDBType;
+class SessionsClass implements ISessions {
+  storage: IStorage<TSession>;
 
-  constructor(database: sessionDBType) {
-    this.DB = database;
+  constructor(database: IStorage<TSession>) {
+    this.storage = database;
   }
 
-  async find(id: string): Promise<sessionType> {
-    return this.DB[id] || Promise.reject(new Error('Token not found'));
+  // eslint-disable-next-line no-unused-vars
+  async find(id: string): Promise<{result?: Array<TSession>, error?: TError}> {
+    const { result, error } = await this.storage.read('id', id);
+    return result ? { result } : { error };
   }
 
-  async add(username: string): Promise<sessionType> {
-    const id: string = crypto.randomBytes(16).toString('base64');
-    const dateOfExpiry = Date.now() + 1000 * 60 * 60;
-    this.DB[id] = { id, username, dateOfExpiry };
-    return this.find(id);
+  async add(username: string): Promise<{result?: TSession, error?: TError}> {
+    const document = JSON.stringify({ username });
+    const { result, error } = await this.storage.create(document);
+    return { result, error };
   }
 
-  async delete(id: string): Promise<sessionType> {
-    return this.find(id).then((session) => {
-      delete this.DB[id];
-      return session;
-    });
+  async delete(id: string): Promise<{result?: TSession, error?: TError}> {
+    const { result, error } = await this.storage.delete('id', id);
+    return { result, error };
   }
 }
 
-const Sessions = new SessionsClass(tokenDB);
+// const database = new Storage();
+const database = new Storage<TSession>('Session');
+const Sessions = new SessionsClass(database);
 
 export default Sessions;
