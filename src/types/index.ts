@@ -1,13 +1,13 @@
 export type TSession = {
-  id: string;
-  username: string;
-  dateOfExpiry: number;
+  id: string,
+  username: string,
+  dateOfExpiry: number,
 };
 
 export type TUser = {
   username: string,
   password: string,
-  permissions: {allow: Array<string>, deny: Array<string>}
+  permissions: {allow: Array<string>, deny: Array<string>},
 }
 
 export type TNote = {
