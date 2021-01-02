@@ -1,11 +1,13 @@
 /* eslint-disable import/extensions */
-/* eslint-disable no-console */
 // eslint-disable-next-line no-unused-vars
-import Sessions from '../../sessions';
+import type { TRequestData, TResponseData } from '../../types';
 
-const unauth = async (request: any, response: any) => {
-  response.statusCode = 200;
-  response.end();
-};
+const unauth = async (request: TRequestData): Promise<TResponseData> => ({
+  status: {
+    code: 1,
+    message: 'Unauthorized',
+  },
+  data: JSON.stringify({ error: 'Unauthorized' }),
+});
 
 export default unauth;

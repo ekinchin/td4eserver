@@ -1,8 +1,12 @@
-const notfound = async (request: any, response: any) => {
-  response.statusCode = 404;
-  response.setHeader('Content-Type', 'application/json');
-  response.write(JSON.stringify({ 404: 'endpoint not exist' }));
-  response.end();
-};
+/* eslint-disable import/extensions */
+// eslint-disable-next-line no-unused-vars
+import type { TRequestData, TResponseData } from '../../types';
+
+const notfound = async (request: TRequestData): Promise<TResponseData> => ({
+  status: {
+    code: 1,
+    message: 'not found',
+  },
+});
 
 export default notfound;

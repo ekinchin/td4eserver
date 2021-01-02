@@ -1,50 +1,27 @@
 /* eslint-disable import/extensions */
 import Users from '../../users';
 // eslint-disable-next-line no-unused-vars
-import type { TUser } from '../../types';
+import type { TUser, TRequestData, TResponseData } from '../../types';
 
-const register = async (request: any, response: any, data: any) => {
-  const { headers } = request;
-  const contentType = headers['content-type'];
-  if (contentType !== 'application/json') {
-    response.statusCode = 400;
-    response.setHeader('Content-Type', 'application/json');
-    response.write(JSON.stringify({ 400: 'not a JSON' }));
-    response.end();
-    return;
+const unregister = async (request: TRequestData): Promise<TResponseData> => {
+  const { data } = request;
+  const { username } = data ? JSON.parse(data) : undefined;
+  const result = await Users.delete(username);
+  if (result) {
+    return {
+      status: {
+        code: 0,
+        message: '',
+      },
+      data: JSON.stringify({ user: result }),
+    };
   }
-  let dataJSON: TUser;
-  try {
-    dataJSON = JSON.parse(data);
-  } catch (e) {
-    response.statusCode = 400;
-    response.setHeader('Content-Type', 'application/json');
-    response.write(JSON.stringify({ 400: 'JSON error' }));
-    response.end();
-    return;
-  }
-  try {
-    const { username, password } = dataJSON;
-    const exists = await Users.find(username);
-    if (!exists.result) {
-      response.statusCode = 200;
-      response.setHeader('Content-Type', 'application/json');
-      response.write(JSON.stringify({ 200: JSON.stringify('user is not exists') }));
-      response.end();
-      return;
-    }
-    const user = await Users.delete(username);
-    response.statusCode = 200;
-    response.setHeader('Content-Type', 'application/json');
-    response.write(JSON.stringify({ 200: JSON.stringify(user.result) }));
-    response.end();
-    return;
-  } catch (error) {
-    response.statusCode = 400;
-    response.setHeader('Content-Type', 'application/json');
-    response.write(JSON.stringify({ 400: JSON.stringify(error) }));
-    response.end();
-  }
+  return {
+    status: {
+      code: 1,
+      message: '',
+    },
+  };
 };
 
-export default register;
+export default unregister;
