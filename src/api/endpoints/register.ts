@@ -1,50 +1,49 @@
 /* eslint-disable import/extensions */
 import Users from '../../users';
 // eslint-disable-next-line no-unused-vars
-import type { TUser } from '../../types';
+import type { TUser, TRequestData, TResponseData } from '../../types';
 
-const register = async (request: any, response: any, data: any) => {
-  const { headers } = request;
-  const contentType = headers['content-type'];
-  if (contentType !== 'application/json') {
-    response.statusCode = 400;
-    response.setHeader('Content-Type', 'application/json');
-    response.write(JSON.stringify({ 400: 'not a JSON' }));
-    response.end();
-    return;
-  }
+const register = async (request: TRequestData): Promise<TResponseData> => {
   let dataJSON: TUser;
-  try {
-    dataJSON = JSON.parse(data);
-  } catch (e) {
-    response.statusCode = 400;
-    response.setHeader('Content-Type', 'application/json');
-    response.write(JSON.stringify({ 400: 'JSON error' }));
-    response.end();
-    return;
-  }
-  try {
-    const { username, password } = dataJSON;
-    const exists = await Users.find(username);
-    if (exists.result) {
-      response.statusCode = 200;
-      response.setHeader('Content-Type', 'application/json');
-      response.write(JSON.stringify({ 200: JSON.stringify('user already exists') }));
-      response.end();
-      return;
+  const { data } = request;
+  if (data) {
+    try {
+      dataJSON = JSON.parse(data);
+    } catch (e) {
+      return {
+        status: {
+          code: 2,
+          message: 'json parse fail',
+        },
+      };
     }
-    const user = await Users.add(username, password);
-    response.statusCode = 200;
-    response.setHeader('Content-Type', 'application/json');
-    response.write(JSON.stringify({ 200: JSON.stringify(user.result) }));
-    response.end();
-    return;
-  } catch (error) {
-    response.statusCode = 400;
-    response.setHeader('Content-Type', 'application/json');
-    response.write(JSON.stringify({ 400: JSON.stringify(error) }));
-    response.end();
+  } else {
+    return {
+      status: {
+        code: 2,
+        message: 'json parse fail',
+      },
+    };
   }
+  const { username, password } = dataJSON;
+  const exists = await Users.find(username);
+  if (exists.result) {
+    return {
+      status: {
+        code: 3,
+        message: 'already exist',
+      },
+      data: JSON.stringify({ error: 'user already exo=ists' }),
+    };
+  }
+  const user = await Users.add(username, password);
+  return {
+    status: {
+      code: 3,
+      message: 'already exist',
+    },
+    data: JSON.stringify({ user: JSON.stringify(user.result) }),
+  };
 };
 
 export default register;

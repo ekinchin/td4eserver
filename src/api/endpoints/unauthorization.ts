@@ -1,21 +1,13 @@
 /* eslint-disable import/extensions */
-/* eslint-disable no-console */
-import Sessions from '../../sessions';
+// eslint-disable-next-line no-unused-vars
+import type { TRequestData, TResponseData } from '../../types';
 
-const unauthorization = async (request: any, response: any) => {
-  // const { headers } = request;
-  // const { session } = headers;
-  // if (session) {
-  //   Sessions.find(session)
-  //     .then((client) => {
-  //       Sessions.delete(client.id);
-  //     })
-  //     .catch(() => {});
-  // }
-  response.statusCode = 401;
-  response.setHeader('Content-Type', 'application/json');
-  response.write(JSON.stringify({ 401: 'access denied - unauthorization' }));
-  response.end();
-};
+const unauthorization = async (request: TRequestData): Promise<TResponseData> => ({
+  status: {
+    code: 1,
+    message: 'Unauthorized',
+  },
+  data: JSON.stringify({ error: 'Unauthorized' }),
+});
 
 export default unauthorization;

@@ -20,3 +20,18 @@ export type TError = {
   code: number,
   message: string,
 }
+
+export type TRequestData = {
+  endpoint: string,
+  session?: string,
+  data?: string,
+}
+
+export type TResponseData = {
+  status: {
+    code: number,
+    message: string,
+  },
+  session?: string,
+  data?: string,
+}

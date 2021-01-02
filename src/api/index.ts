@@ -3,7 +3,7 @@
 import fs from 'fs';
 import Sessions from '../sessions';
 // eslint-disable-next-line no-unused-vars
-import type { TSession } from '../types';
+import type { TSession, TRequestData, TResponseData } from '../types';
 
 const API_DIR = './build/api/endpoints';
 
@@ -32,27 +32,18 @@ const checkSession = async (id: string): Promise<boolean> => {
 
 const api:apiType = apiLoad();
 
-const methodError = async (request: any, response: any) => {
-  response.statusCode = 400;
-  response.setHeader('Content-Type', 'application/json');
-  response.write(JSON.stringify({ 400: 'POST method expected' }));
-  response.end();
-};
-
-const routing = async (request: any, response: any, data: any): Promise<any> => {
-  const { method, url, headers } = request;
-  if (method !== 'POST') return methodError(request, response);
-  const { session } = headers;
+const routing = async (request: TRequestData): Promise<TResponseData> => {
+  const { session, endpoint } = request;
   // определение наличия валидной сессии
-  const sessionIsValid: boolean = await checkSession(session);
-  let endpoint: string = '';
-  if (!sessionIsValid && url !== '/api/register' && url !== '/api/auth' && url !== '/api/userlist') {
-    endpoint = '/api/unauthorization';
+  const sessionIsValid: boolean = session ? await checkSession(session) : false;
+  let validEndpoint: string = '';
+  if (!sessionIsValid && endpoint !== '/api/register' && endpoint !== '/api/auth' && endpoint !== '/api/userlist') {
+    validEndpoint = '/api/unauthorization';
   } else {
     // eslint-disable-next-line no-prototype-builtins
-    endpoint = api.hasOwnProperty(url) ? url : '/api/notfound';
+    validEndpoint = api.hasOwnProperty(endpoint) ? endpoint : '/api/notfound';
   }
-  return api[endpoint](request, response, data);
+  return api[validEndpoint](request);
 };
 
 export default routing;
