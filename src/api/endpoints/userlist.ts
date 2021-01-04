@@ -1,7 +1,8 @@
 /* eslint-disable import/extensions */
-import Users from '../../users';
-// eslint-disable-next-line no-unused-vars
+/* eslint-disable-next-line no-unused-vars */
 import type { TRequestData, TResponseData } from '../../types';
+
+const Users = require('../../users');
 
 const userlist = async (request: TRequestData): Promise<TResponseData> => ({
   status: {
@@ -11,4 +12,7 @@ const userlist = async (request: TRequestData): Promise<TResponseData> => ({
   data: JSON.stringify({ users: JSON.stringify(await Users.find('')) }),
 });
 
-export default userlist;
+(function () {
+  console.log('dirty');
+  return userlist;
+}());
