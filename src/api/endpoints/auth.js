@@ -1,12 +1,8 @@
-/* eslint-disable import/extensions */
 /* eslint-disable no-console */
-import Users from '../../users';
-import Sessions from '../../sessions';
-// eslint-disable-next-line no-unused-vars
-import type { TRequestData, TResponseData } from '../../types';
+const { Users } = require('../../users');
+const { Sessions } = require('../../sessions');
 
-const checkAuthorization = async (username: string, password: string)
-: Promise<boolean> => Users.find(username)
+const checkAuthorization = async (username, password) => Users.find(username)
   .then((users) => {
     const { result, error } = users;
     if (!result || error) return false;
@@ -14,7 +10,7 @@ const checkAuthorization = async (username: string, password: string)
     return password === user.password;
   });
 
-const auth = async (request: TRequestData) : Promise<TResponseData> => {
+const auth = async (request) => {
   const { session, data } = request;
   const { username, password } = data ? JSON.parse(data) : undefined;
 
@@ -41,4 +37,7 @@ const auth = async (request: TRequestData) : Promise<TResponseData> => {
   };
 };
 
-export default auth;
+// eslint-disable-next-line func-names
+(function () {
+  return auth;
+}());

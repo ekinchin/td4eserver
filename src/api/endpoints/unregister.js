@@ -1,9 +1,7 @@
 /* eslint-disable import/extensions */
-import Users from '../../users';
-// eslint-disable-next-line no-unused-vars
-import type { TUser, TRequestData, TResponseData } from '../../types';
+const { Users } = ('../../users');
 
-const unregister = async (request: TRequestData): Promise<TResponseData> => {
+const unregister = async (request) => {
   const { data } = request;
   const { username } = data ? JSON.parse(data) : undefined;
   const result = await Users.delete(username);
@@ -24,4 +22,7 @@ const unregister = async (request: TRequestData): Promise<TResponseData> => {
   };
 };
 
-export default unregister;
+// eslint-disable-next-line func-names
+(function () {
+  return unregister;
+}());

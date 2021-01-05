@@ -1,10 +1,7 @@
-/* eslint-disable import/extensions */
-import Users from '../../users';
-// eslint-disable-next-line no-unused-vars
-import type { TUser, TRequestData, TResponseData } from '../../types';
+const { Users } = require('../../users');
 
-const register = async (request: TRequestData): Promise<TResponseData> => {
-  let dataJSON: TUser;
+const register = async (request) => {
+  let dataJSON;
   const { data } = request;
   if (data) {
     try {
@@ -46,4 +43,7 @@ const register = async (request: TRequestData): Promise<TResponseData> => {
   };
 };
 
-export default register;
+// eslint-disable-next-line func-names
+(function () {
+  return register;
+}());

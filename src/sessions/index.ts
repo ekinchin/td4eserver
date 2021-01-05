@@ -36,4 +36,5 @@ class SessionsClass implements ISessions {
 const database = new Storage<TSession>('Session');
 const Sessions = new SessionsClass(database);
 
-export default Sessions;
+// eslint-disable-next-line import/prefer-default-export
+export { Sessions };
