@@ -41,4 +41,5 @@ class UsersClass implements IUser {
 const database = new Storage<TUser>('User');
 const Users = new UsersClass(database);
 
-export default Users;
+// eslint-disable-next-line import/prefer-default-export
+export { Users };
