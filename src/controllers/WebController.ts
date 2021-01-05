@@ -32,6 +32,12 @@ const webController = (api: TApi) => {
   };
 
   return async (request:any, response:any, data:any) => {
+    const { url, method } = request;
+    if (!url.startsWith('/api/') || method !== 'POST') {
+      response.statusCode = 403;
+      response.end();
+      return;
+    }
     const parsedRequest = parseRequest(request, data);
     const endpointAnswer = await router(parsedRequest);
     response.statusCode = endpointAnswer.status.code ? 400 : 200;

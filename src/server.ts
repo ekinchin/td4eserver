@@ -43,11 +43,6 @@ const createServer = (webController: (request: any, response: any, data: any) =>
       console.error(err);
     })
     .on('request', (request, response) => {
-      const { url, method } = request;
-      if (!url.startsWith('/api/') || method !== 'POST') {
-        response.statusCode = 403;
-        response.end();
-      }
       let data: string = '';
       request.on('data', (chunk: string) => { data += chunk; });
       request.on('end', async () => webController(request, response, data));
