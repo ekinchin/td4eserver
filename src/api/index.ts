@@ -5,7 +5,7 @@ import fs from 'fs';
 import vm from 'vm';
 import { Sessions, Users } from '../entities';
 // eslint-disable-next-line no-unused-vars
-import type { TApi } from '../types';
+import type { TApiMethod, TApi } from '../types';
 
 const API_DIR = './build/api/methods';
 
@@ -59,12 +59,12 @@ const apiLoad = () => {
   const loadable = files.filter((filename) => filename !== 'index.js' && filename.endsWith('.js'));
   const existsEndpoints = endpointsDeclaration.filter((endpoint) => loadable.includes(`${endpoint.name}.js`));
   console.log('Exists enpoints: ', existsEndpoints);
-  return existsEndpoints.reduce<Record<string, string>>((endpoints, endpoint) => {
+  return existsEndpoints.reduce<Record<string, TApiMethod>>((endpoints, endpoint) => {
     const { name, context } = endpoint;
     console.log(`loading ${name}`);
     const sandbox = vm.createContext(context);
     const source = fs.readFileSync(`${API_DIR}/${name}.js`).toString();
-    const f = vm.runInContext(source, sandbox);
+    const f: TApiMethod = vm.runInContext(source, sandbox);
     // eslint-disable-next-line no-param-reassign
     endpoints[`/api/${name}`] = f;
     return endpoints;
