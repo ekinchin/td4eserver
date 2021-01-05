@@ -1,5 +1,3 @@
-const { Users } = require('../../users');
-
 const userlist = async (request) => ({
   status: {
     code: 0,

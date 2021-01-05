@@ -3,6 +3,8 @@
 import fs from 'fs';
 import vm from 'vm';
 import { Sessions } from '../sessions';
+import { Users } from '../users';
+
 // eslint-disable-next-line no-unused-vars
 import type { TSession, TRequestData, TResponseData } from '../types';
 
@@ -19,25 +21,39 @@ const safeRequire = (module: string) => {
 const endpointsDeclaration = [
   {
     name: 'userlist',
-    context: { require: safeRequire, JSON, console },
+    context: {
+      require: safeRequire, JSON, console, Sessions, Users,
+    },
   }, {
     name: 'auth',
-    context: { require: safeRequire, JSON, console },
+    context: {
+      require: safeRequire, JSON, console, Sessions, Users,
+    },
   }, {
     name: 'notfound',
-    context: { require: safeRequire, JSON, console },
+    context: {
+      require: safeRequire, JSON, console, Sessions, Users,
+    },
   }, {
     name: 'register',
-    context: { require: safeRequire, JSON, console },
+    context: {
+      require: safeRequire, JSON, console, Sessions, Users,
+    },
   }, {
     name: 'unregister',
-    context: { require: safeRequire, JSON, console },
+    context: {
+      require: safeRequire, JSON, console, Sessions, Users,
+    },
   }, {
     name: 'unauth',
-    context: { require: safeRequire, JSON, console },
+    context: {
+      require: safeRequire, JSON, console, Sessions, Users,
+    },
   }, {
     name: 'unauthorization',
-    context: { require: safeRequire, JSON, console },
+    context: {
+      require: safeRequire, JSON, console, Sessions, Users,
+    },
   },
 ];
 

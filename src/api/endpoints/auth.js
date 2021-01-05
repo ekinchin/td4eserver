@@ -1,7 +1,3 @@
-/* eslint-disable no-console */
-const { Users } = require('../../users');
-const { Sessions } = require('../../sessions');
-
 const checkAuthorization = async (username, password) => Users.find(username)
   .then((users) => {
     const { result, error } = users;

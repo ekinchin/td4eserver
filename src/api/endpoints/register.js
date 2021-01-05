@@ -1,5 +1,3 @@
-const { Users } = require('../../users');
-
 const register = async (request) => {
   let dataJSON;
   const { data } = request;

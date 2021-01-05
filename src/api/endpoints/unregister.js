@@ -1,6 +1,3 @@
-/* eslint-disable import/extensions */
-const { Users } = ('../../users');
-
 const unregister = async (request) => {
   const { data } = request;
   const { username } = data ? JSON.parse(data) : undefined;
