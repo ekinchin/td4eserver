@@ -49,9 +49,9 @@ const apiLoad = () => {
   return existsEndpoints.reduce<Record<string, string>>((endpoints, endpoint) => {
     const { name, context } = endpoint;
     console.log(`loading ${name}`);
-    const contextify = vm.createContext(context);
+    const sandbox = vm.createContext(context);
     const source = fs.readFileSync(`${API_DIR}/${name}.js`).toString();
-    const f = vm.runInContext(source, contextify);
+    const f = vm.runInContext(source, sandbox);
     // eslint-disable-next-line no-param-reassign
     endpoints[`/api/${name}`] = f;
     return endpoints;
