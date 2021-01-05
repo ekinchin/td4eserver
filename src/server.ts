@@ -2,10 +2,6 @@
 /* eslint-disable no-console */
 // import https from 'https';
 import http from 'http';
-// import fs from 'fs';
-// import path from 'path';
-// eslint-disable-next-line no-unused-vars
-import type { TRequestData, TResponseData } from './types';
 
 const DEFAULT_PORT: number = 8000;
 const PORT: string | number = process.env.PORT || DEFAULT_PORT;
@@ -36,13 +32,7 @@ type CERTIFICATE = {
 //   return cert;
 // };
 
-const parseRequest = (request: any, data: string): TRequestData => ({
-  endpoint: request.url,
-  data,
-  session: request.headers.session,
-});
-
-const createServer = (ondata: (request: TRequestData) => Promise<TResponseData>) => {
+const createServer = (webController: (request: any, response: any, data: any) => Promise<void>) => {
   // https.createServer(readCertificate(DEFAULT_CERT_DIR))
   http.createServer()
     .listen(PORT)
@@ -60,14 +50,7 @@ const createServer = (ondata: (request: TRequestData) => Promise<TResponseData>)
       }
       let data: string = '';
       request.on('data', (chunk: string) => { data += chunk; });
-      request.on('end', async () => {
-        const parsedRequest: TRequestData = parseRequest(request, data);
-        const endpointAnswer: TResponseData = await ondata(parsedRequest);
-        response.statusCode = endpointAnswer.status.code ? 400 : 200;
-        response.setHeader('Content-Type', 'application/json');
-        if (endpointAnswer.data) response.write(JSON.stringify(endpointAnswer.data));
-        response.end();
-      });
+      request.on('end', async () => webController(request, response, data));
     });
 };
 

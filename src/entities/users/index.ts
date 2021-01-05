@@ -1,11 +1,10 @@
 /* eslint-disable import/extensions */
 // eslint-disable-next-line no-unused-vars
-import type { TUser, TError } from '../types';
-import Storage from '../storage';
+import type { TUser, TError } from '../../types';
 // eslint-disable-next-line no-unused-vars
-import { IStorage } from '../interfaces/storage';
+import { IStorage } from '../../interfaces/storage';
 // eslint-disable-next-line no-unused-vars
-import { IUser } from '../interfaces/users';
+import { IUser } from '../../interfaces/users';
 
 class UsersClass implements IUser {
   storage: IStorage<TUser>;
@@ -38,8 +37,5 @@ class UsersClass implements IUser {
   }
 }
 
-const database = new Storage<TUser>('User');
-const Users = new UsersClass(database);
-
 // eslint-disable-next-line import/prefer-default-export
-export { Users };
+export { UsersClass };

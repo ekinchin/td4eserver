@@ -35,3 +35,5 @@ export type TResponseData = {
   session?: string,
   data?: string,
 }
+
+export type TApi = {[index: string]: any, };
