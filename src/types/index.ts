@@ -35,3 +35,6 @@ export type TResponseData = {
   session?: string,
   data?: string,
 }
+
+export type TApiMethod = (request: TRequestData)=>Promise<TResponseData>;
+export type TApi = {[index: string]: TApiMethod, };

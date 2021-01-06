@@ -1,11 +1,10 @@
 /* eslint-disable import/extensions */
-import Storage from '../storage';
 // eslint-disable-next-line no-unused-vars
-import type { IStorage } from '../interfaces/storage';
+import type { IStorage } from '../../interfaces/storage';
 // eslint-disable-next-line no-unused-vars
-import type { ISessions } from '../interfaces/sessions';
+import type { ISessions } from '../../interfaces/sessions';
 // eslint-disable-next-line no-unused-vars
-import type { TSession, TError } from '../types';
+import type { TSession, TError } from '../../types';
 
 class SessionsClass implements ISessions {
   storage: IStorage<TSession>;
@@ -32,9 +31,5 @@ class SessionsClass implements ISessions {
   }
 }
 
-// const database = new Storage();
-const database = new Storage<TSession>('Session');
-const Sessions = new SessionsClass(database);
-
 // eslint-disable-next-line import/prefer-default-export
-export { Sessions };
+export { SessionsClass };
