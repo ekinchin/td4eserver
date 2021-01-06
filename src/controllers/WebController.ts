@@ -11,24 +11,24 @@ const checkSession = async (id: string): Promise<boolean> => {
 };
 
 const parseRequest = (request: any, data: string): TRequestData => ({
-  endpoint: request.url,
+  method: request.url,
   data,
   session: request.headers.session,
 });
 
 const webController = (api: TApi) => {
   const router = async (request: TRequestData): Promise<TResponseData> => {
-    const { session, endpoint } = request;
+    const { session, method } = request;
     // определение наличия валидной сессии
     const sessionIsValid: boolean = session ? await checkSession(session) : false;
-    let validEndpoint: string = '';
-    if (!sessionIsValid && endpoint !== '/api/register' && endpoint !== '/api/auth' && endpoint !== '/api/userlist') {
-      validEndpoint = '/api/unauthorization';
+    let validMethod: string = '';
+    if (!sessionIsValid && method !== '/api/register' && method !== '/api/auth' && method !== '/api/userlist') {
+      validMethod = '/api/unauthorization';
     } else {
       // eslint-disable-next-line no-prototype-builtins
-      validEndpoint = api.hasOwnProperty(endpoint) ? endpoint : '/api/notfound';
+      validMethod = api.hasOwnProperty(method) ? method : '/api/notfound';
     }
-    return api[validEndpoint](request);
+    return api[validMethod](request);
   };
 
   return async (request:any, response:any, data:any) => {

@@ -22,7 +22,7 @@ export type TError = {
 }
 
 export type TRequestData = {
-  endpoint: string,
+  method: string,
   session?: string,
   data?: string,
 }
