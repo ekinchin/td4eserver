@@ -17,6 +17,5 @@ const Sessions = new SessionsClass(sessionsDatabase);
 
 const api = createApi(Sessions, Users);
 const WebController = createWebController(api, Sessions);
+// eslint-disable-next-line no-unused-vars
 const webServer = createServer(WebController);
-
-export { Users, Sessions };
