@@ -1,4 +1,4 @@
 // eslint-disable-next-line import/extensions
-import storage from './mongoose';
+import Storage from './mongoose';
 
-export default storage;
+export default Storage;
