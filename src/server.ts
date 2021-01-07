@@ -32,21 +32,20 @@ type CERTIFICATE = {
 //   return cert;
 // };
 
-const createServer = (webController: (request: any, response: any, data: any) => Promise<void>) => {
-  // https.createServer(readCertificate(DEFAULT_CERT_DIR))
-  http.createServer()
-    .listen(PORT)
-    .on('listen', () => {
-      console.log(`server running on port ${PORT}`);
-    })
-    .on('error', (err: Error) => {
-      console.error(err);
-    })
-    .on('request', (request, response) => {
-      let data: string = '';
-      request.on('data', (chunk: string) => { data += chunk; });
-      request.on('end', async () => webController(request, response, data));
-    });
-};
-
+// https.createServer(readCertificate(DEFAULT_CERT_DIR))
+const createServer = (
+  webController: (request: any, response: any, data: any) => Promise<void>,
+) => http.createServer()
+  .listen(PORT)
+  .on('listen', () => {
+    console.log(`server running on port ${PORT}`);
+  })
+  .on('error', (err: Error) => {
+    console.error(err);
+  })
+  .on('request', (request, response) => {
+    let data: string = '';
+    request.on('data', (chunk: string) => { data += chunk; });
+    request.on('end', async () => webController(request, response, data));
+  });
 export default createServer;
