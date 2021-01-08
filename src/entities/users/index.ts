@@ -20,7 +20,7 @@ class UsersClass implements IUser {
 
   async add(username: string, password: string): Promise<{result?: TUser, error?: TError}> {
     const user: TUser = {
-      username, password, permissions: { allow: [''], deny: [''] },
+      id: '', username, password, permissions: { allow: [''], deny: [''] },
     };
     const { result, error } = await this.storage.create(JSON.stringify(user));
     return { result, error };

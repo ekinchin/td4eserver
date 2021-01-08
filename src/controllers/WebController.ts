@@ -13,6 +13,7 @@ const createWebController = (api: TApi, Sessions: ISessions) => {
     const session = sessions.result[0];
     return !((Date.now() > session.dateOfExpiry));
   };
+
   const parseRequest = (request: any, data: string): TRequestData => ({
     endpoint: request.url.toLowerCase().replace(API_PREFIX, ''),
     data,
@@ -24,11 +25,11 @@ const createWebController = (api: TApi, Sessions: ISessions) => {
     // определение наличия валидной сессии
     const sessionIsValid: boolean = session ? await checkSession(session) : false;
     let validEndpoint: string = '';
-    if (!sessionIsValid && endpoint !== 'register' && endpoint !== 'auth' && endpoint !== 'userlist') {
-      validEndpoint = 'unauthorization';
-    } else {
+    if (sessionIsValid || endpoint === 'register' || endpoint === 'auth') {
       // eslint-disable-next-line no-prototype-builtins
       validEndpoint = api.hasOwnProperty(endpoint) ? endpoint : 'notfound';
+    } else {
+      validEndpoint = 'unauthorization';
     }
     return api[validEndpoint](request);
   };

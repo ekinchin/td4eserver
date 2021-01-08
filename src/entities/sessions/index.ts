@@ -15,12 +15,14 @@ class SessionsClass implements ISessions {
 
   // eslint-disable-next-line no-unused-vars
   async find(id: string): Promise<{result?: Array<TSession>, error?: TError}> {
-    const { result, error } = await this.storage.read('id', id);
+    const { result, error } = await this.storage.read('_id', id);
     return result ? { result } : { error };
   }
 
-  async add(username: string): Promise<{result?: TSession, error?: TError}> {
-    const document = JSON.stringify({ username });
+  async add(userId: string): Promise<{result?: TSession, error?: TError}> {
+    const dateOfExpiry = Date.now() + 3600000;
+    console.log({ userId, dateOfExpiry });
+    const document = JSON.stringify({ userId, dateOfExpiry });
     const { result, error } = await this.storage.create(document);
     return { result, error };
   }

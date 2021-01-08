@@ -14,7 +14,8 @@ type TQuery = { [index: string]:string};
 const models: {[index: string]:any} = {
   User: {
     model: mongoose.model('User', userSchema),
-    toJSON: (input: any): TUser => ({
+    toDTO: (input: any): TUser => ({
+      id: input._id,
       username: input.username,
       password: input.password,
       permissions: input.permissions,
@@ -22,15 +23,15 @@ const models: {[index: string]:any} = {
   },
   Session: {
     model: mongoose.model('Session', sessionSchema),
-    toJSON: (input: any): TSession => ({
+    toDTO: (input: any): TSession => ({
       id: input._id,
-      username: input.username,
+      userId: input.userId,
       dateOfExpiry: input.dateOfExpiry,
     }),
   },
   Note: {
     model: mongoose.model('Note', noteSchema),
-    toJSON: (input: any) => ({
+    toDTO: (input: any) => ({
       id: input._id,
       date: input.date,
       text: input.text,
@@ -46,17 +47,17 @@ mongoose.connect('mongodb://localhost:27017', {
 class storage<T> implements IStorage<T> {
   Model: any;
 
-  private toJSON: (record: string) => T;
+  private toDTO: (record: string) => T;
 
   constructor(database: string) {
     this.Model = models[database].model;
-    this.toJSON = models[database].toJSON;
+    this.toDTO = models[database].toDTO;
   }
 
   async delete(field: string, value: string) : Promise<{result?: T, error?: TError}> {
     const query: TQuery = {};
     query[field] = value;
-    const result: T = this.toJSON(await this.Model.deleteOne(query).exec());
+    const result: T = this.toDTO(await this.Model.deleteOne(query).exec());
     return {
       result,
     };
@@ -69,8 +70,8 @@ class storage<T> implements IStorage<T> {
     }
     const readed: any[] = await this.Model.find(query).exec();
     if (readed.length > 0) {
-      readed.forEach((element) => { this.toJSON(element); });
-      return { result: readed };
+      const DTO: T[] = readed.reduce((acc, element) => [...acc, this.toDTO(element)], []);
+      return { result: DTO };
     }
     return {
       error: {
@@ -83,7 +84,7 @@ class storage<T> implements IStorage<T> {
   async create(document: string) : Promise<{result?: T, error?: TError}> {
     const doc = JSON.parse(document);
     const item = new this.Model(doc);
-    const result: T = this.toJSON(await item.save());
+    const result: T = this.toDTO(await item.save());
     return {
       result,
     };

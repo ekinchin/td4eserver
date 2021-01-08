@@ -3,7 +3,9 @@ const checkAuthorization = async (username, password) => Users.find(username)
     const { result, error } = users;
     if (!result || error) return false;
     const user = result[0];
-    return password === user.password;
+    const valid = password === user.password;
+    const { id } = user;
+    return { valid, id };
   });
 
 const auth = async (request) => {
@@ -14,8 +16,8 @@ const auth = async (request) => {
     Sessions.delete(session)
       .catch(() => {});
   }
-  const isAuth = username && password ? await checkAuthorization(username, password) : false;
-  if (!isAuth || !username || !password) {
+  const { valid, id } = username && password ? await checkAuthorization(username, password) : { valid: false };
+  if (!valid || !username || !password) {
     return {
       status: {
         code: 1,
@@ -23,7 +25,7 @@ const auth = async (request) => {
       },
     };
   }
-  const client = await Sessions.add(username);
+  const client = await Sessions.add(id);
   return {
     status: {
       code: 0,

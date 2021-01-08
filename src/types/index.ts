@@ -1,10 +1,11 @@
 export type TSession = {
   id: string,
-  username: string,
+  userId: string,
   dateOfExpiry: number,
 };
 
 export type TUser = {
+  id: string,
   username: string,
   password: string,
   permissions: {allow: Array<string>, deny: Array<string>},
