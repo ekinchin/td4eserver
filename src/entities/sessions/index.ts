@@ -14,8 +14,8 @@ class SessionsClass implements ISessions {
   }
 
   // eslint-disable-next-line no-unused-vars
-  async find(id: string): Promise<{result?: Array<TSession>, error?: TError}> {
-    const { result, error } = await this.storage.read('_id', id);
+  async find(field: string, value: string): Promise<{result?: Array<TSession>, error?: TError}> {
+    const { result, error } = await this.storage.read(field, value);
     return result ? { result } : { error };
   }
 

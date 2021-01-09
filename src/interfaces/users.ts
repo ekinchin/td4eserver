@@ -3,7 +3,7 @@
 import type { TUser, TError } from '../types';
 
 export interface IUser {
-  find: (username: string) => Promise<{result?: Array<TUser>, error?: TError}>,
+  find: (field: string, value: string) => Promise<{result?: Array<TUser>, error?: TError}>,
   add: (username: string, password: string,) => Promise<{result?: TUser, error?: TError}>,
   delete: (id: string) => Promise<{result?: TUser, error?: TError}>,
 }

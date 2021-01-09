@@ -13,8 +13,8 @@ class UsersClass implements IUser {
     this.storage = database;
   }
 
-  async find(username: string): Promise<{result?: Array<TUser>, error?: TError}> {
-    const { result, error } = await this.storage.read('username', username);
+  async find(field: string, value: string): Promise<{result?: Array<TUser>, error?: TError}> {
+    const { result, error } = await this.storage.read(field, value);
     return { result, error };
   }
 
@@ -27,7 +27,7 @@ class UsersClass implements IUser {
   }
 
   async delete(username: string): Promise<{result?: TUser, error?: TError}> {
-    const existUsers: {result?: Array<TUser>, error?: TError} = await this.find(username);
+    const existUsers: {result?: Array<TUser>, error?: TError} = await this.find('username', username);
     if (existUsers) {
       const { result, error } = await this.storage.delete('username', username);
       return { result, error };
