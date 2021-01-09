@@ -10,17 +10,28 @@ const register = async (request) => {
           code: 2,
           message: 'json parse fail',
         },
+        data: { error: 'json parse error' },
       };
     }
   } else {
     return {
       status: {
         code: 2,
-        message: 'json parse fail',
+        message: 'user data not received',
       },
+      data: { error: 'user data not received' },
     };
   }
   const { username, password } = dataJSON;
+  if (!username || !password) {
+    return {
+      status: {
+        code: 3,
+        message: 'empty username or password',
+      },
+      data: { error: 'empty username or password' },
+    };
+  }
   const exists = await Users.find(username);
   if (exists.result) {
     return {
@@ -28,7 +39,7 @@ const register = async (request) => {
         code: 3,
         message: 'already exist',
       },
-      data: JSON.stringify({ error: 'user already exo=ists' }),
+      data: { error: 'user already exists' },
     };
   }
   const user = await Users.add(username, password);
@@ -37,7 +48,7 @@ const register = async (request) => {
       code: 3,
       message: 'already exist',
     },
-    data: JSON.stringify({ user: JSON.stringify(user.result) }),
+    data: { username: user.result.username },
   };
 };
 
