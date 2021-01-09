@@ -57,9 +57,19 @@ class storage<T> implements IStorage<T> {
   async delete(field: string, value: string) : Promise<{result?: T, error?: TError}> {
     const query: TQuery = {};
     query[field] = value;
-    const result: T = this.toDTO(await this.Model.deleteOne(query).exec());
+    const finded = await this.read(field, value);
+    const { result } = finded;
+    if (!result) {
+      return {
+        error: {
+          code: 1,
+          message: 'Could not exists',
+        },
+      };
+    }
+    await this.Model.deleteOne(query).exec();
     return {
-      result,
+      result: result[0],
     };
   }
 
