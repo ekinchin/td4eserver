@@ -13,5 +13,6 @@ WORKDIR /app
 #!/bin/sh
 # Copy from the stahg 1
 COPY --from=builder /app/build /app
+COPY --from=builder /app/src/api/methods /app/src/api
 EXPOSE 8000
 CMD ["node", "index.js"]

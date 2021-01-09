@@ -12,26 +12,24 @@ const auth = async (request) => {
   const { session, data } = request;
   const { username, password } = data ? JSON.parse(data) : undefined;
 
-  if (session) {
-    Sessions.delete(session)
-      .catch(() => {});
-  }
+  if (session) Sessions.delete(session);
   const { valid, id } = username && password ? await checkAuthorization(username, password) : { valid: false };
   if (!valid || !username || !password) {
     return {
       status: {
         code: 1,
-        message: ' authorization error',
+        message: 'authorization error',
       },
     };
   }
   const client = await Sessions.add(id);
+  const { result } = client;
   return {
     status: {
       code: 0,
       message: 'OK',
     },
-    data: JSON.stringify(client.result),
+    data: JSON.stringify({ session: result.id, dateOfExpiry: result.dateOfExpiry }),
   };
 };
 
