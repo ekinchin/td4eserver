@@ -21,14 +21,13 @@ class SessionsClass implements ISessions {
 
   async add(userId: string): Promise<{result?: TSession, error?: TError}> {
     const dateOfExpiry = Date.now() + 3600000;
-    console.log({ userId, dateOfExpiry });
     const document = JSON.stringify({ userId, dateOfExpiry });
     const { result, error } = await this.storage.create(document);
     return { result, error };
   }
 
   async delete(id: string): Promise<{result?: TSession, error?: TError}> {
-    const { result, error } = await this.storage.delete('id', id);
+    const { result, error } = await this.storage.delete('_id', id);
     return { result, error };
   }
 }
