@@ -3,7 +3,7 @@ const userlist = async (request) => ({
     code: 0,
     message: '',
   },
-  data: JSON.stringify({ users: JSON.stringify(await Users.find('')) }),
+  data: { users: await Users.find('') },
 });
 
 // eslint-disable-next-line func-names

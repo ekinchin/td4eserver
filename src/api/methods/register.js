@@ -32,7 +32,7 @@ const register = async (request) => {
       data: { error: 'empty username or password' },
     };
   }
-  const exists = await Users.find(username);
+  const exists = await Users.find('username', username);
   if (exists.result) {
     return {
       status: {

@@ -1,4 +1,4 @@
-const checkAuthorization = async (username, password) => Users.find(username)
+const checkAuthorization = async (username, password) => Users.find('username', username)
   .then((users) => {
     const { result, error } = users;
     if (!result || error) return false;
@@ -29,7 +29,7 @@ const auth = async (request) => {
       code: 0,
       message: 'OK',
     },
-    data: JSON.stringify({ session: result.id, dateOfExpiry: result.dateOfExpiry }),
+    data: { session: result.id, dateOfExpiry: result.dateOfExpiry },
   };
 };
 

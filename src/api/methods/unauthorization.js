@@ -3,7 +3,7 @@ const unauthorization = async (request) => ({
     code: 1,
     message: 'Unauthorized',
   },
-  data: JSON.stringify({ error: 'Unauthorized' }),
+  data: { error: 'Unauthorized' },
 });
 
 // eslint-disable-next-line func-names
