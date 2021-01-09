@@ -45,7 +45,7 @@ const register = async (request) => {
   const user = await Users.add(username, password);
   return {
     status: {
-      code: 3,
+      code: 0,
       message: 'already exist',
     },
     data: { username: user.result.username },
