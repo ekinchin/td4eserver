@@ -13,6 +13,7 @@ export type TUser = {
 
 export type TNote = {
   id: string,
+  userId: string,
   date: string,
   text: string,
 }
