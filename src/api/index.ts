@@ -9,6 +9,8 @@ import type { TApiMethod, TApi } from '../types';
 import { ISessions } from '../interfaces/sessions';
 // eslint-disable-next-line no-unused-vars
 import { IUser } from '../interfaces/users';
+// eslint-disable-next-line no-unused-vars
+import { INotes } from '../interfaces/notes';
 
 type TEndpointDeclaration = {
   name: string,
@@ -27,6 +29,7 @@ const safeRequire = (module: string) => {
 const apiLoad = (endpointsDeclaration:TEndpointsDeclaration) => {
   const files = fs.readdirSync(API_DIR);
   const loadable = files.filter((filename) => filename !== 'index.js' && filename.endsWith('.js'));
+  console.log(loadable);
   const existsEndpoints = endpointsDeclaration.filter((endpoint) => loadable.includes(`${endpoint.name}.js`));
   console.log('Exists enpoints: ', existsEndpoints);
   return existsEndpoints.reduce<Record<string, TApiMethod>>((endpoints, endpoint) => {
@@ -41,7 +44,7 @@ const apiLoad = (endpointsDeclaration:TEndpointsDeclaration) => {
   }, {});
 };
 
-const createAPi = (Sessions: ISessions, Users: IUser) => {
+const createAPi = (Sessions: ISessions, Users: IUser, Notes: INotes) => {
   const endpointsDeclaration = [
     {
       name: 'userlist',
@@ -77,6 +80,21 @@ const createAPi = (Sessions: ISessions, Users: IUser) => {
       name: 'unauthorization',
       context: {
         require: safeRequire, JSON, console, Sessions, Users,
+      },
+    }, {
+      name: 'getnotes',
+      context: {
+        require: safeRequire, JSON, console, Sessions, Users, Notes,
+      },
+    }, {
+      name: 'createnote',
+      context: {
+        require: safeRequire, JSON, console, Sessions, Users, Notes,
+      },
+    }, {
+      name: 'deletenote',
+      context: {
+        require: safeRequire, JSON, console, Sessions, Users, Notes,
       },
     },
   ];
