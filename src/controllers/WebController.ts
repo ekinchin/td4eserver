@@ -1,17 +1,45 @@
 /* eslint-disable import/extensions */
-// eslint-disable-next-line no-unused-vars
-import type { TRequestData, TResponseData, TApi } from '../types';
+import type {
+  // eslint-disable-next-line no-unused-vars
+  TRequestData, TResponseData, TApi, TUser,
+} from '../types';
 // eslint-disable-next-line no-unused-vars
 import { ISessions } from '../interfaces/sessions';
+// eslint-disable-next-line no-unused-vars
+import { IUser } from '../interfaces/users';
 
 const API_PREFIX = '/api/';
 
-const createWebController = (api: TApi, Sessions: ISessions) => {
+const createWebController = (api: TApi, Sessions: ISessions, Users: IUser) => {
   const checkSession = async (id: string): Promise<boolean> => {
     const sessions = await Sessions.find('_id', id);
     if (!sessions.result) return false;
     const session = sessions.result[0];
     return !((Date.now() > session.dateOfExpiry));
+  };
+
+  const getUserIdbySession = async (session: string): Promise<string> => {
+    const findedSession = await Sessions.find('_id', session);
+    if (findedSession.result) {
+      return findedSession.result[0].userId;
+    }
+    return '';
+  };
+
+  const getUserInfo = async (userId: string): Promise<TUser> => {
+    const findedUser = await Users.find('_id', userId);
+    if (findedUser.result) {
+      const user = findedUser.result[0];
+      user.password = '';
+      user.id = user.id.toString();
+      return user;
+    }
+    return {
+      id: '',
+      username: '',
+      password: '',
+      permissions: { allow: [], deny: [] },
+    };
   };
 
   const parseRequest = (request: any, data: string): TRequestData => ({
@@ -30,6 +58,12 @@ const createWebController = (api: TApi, Sessions: ISessions) => {
       validEndpoint = api.hasOwnProperty(endpoint) ? endpoint : 'notfound';
     } else {
       validEndpoint = 'unauthorization';
+    }
+    if (session && sessionIsValid) {
+      const userId = await getUserIdbySession(session);
+      const user = await getUserInfo(userId);
+      request.username = user.username;
+      request.userId = user.id;
     }
     return api[validEndpoint](request);
   };

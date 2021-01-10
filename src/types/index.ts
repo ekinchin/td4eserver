@@ -26,6 +26,8 @@ export type TError = {
 export type TRequestData = {
   endpoint: string,
   session?: string,
+  username?: string,
+  userId?: string,
   data?: string,
 }
 

@@ -1,10 +1,8 @@
 const deletenote = async (request) => {
-  const { data, session } = request;
-  const findedSession = await Sessions.find('_id', session);
-  const findedUser = await Users.find('_id', findedSession.result[0].userId);
+  const { data, userId } = request;
   const deleteReq = JSON.parse(data);
   const findedNotes = await Notes.find('_id', deleteReq.id);
-  if (findedNotes.result[0].userId === findedUser.result[0].id.toString()) {
+  if (findedNotes.result[0].userId === userId) {
     const { result } = await Notes.delete(deleteReq.id);
     return {
       status: {

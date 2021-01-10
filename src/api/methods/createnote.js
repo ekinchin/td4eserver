@@ -1,9 +1,7 @@
 const createnote = async (request) => {
-  const { data, session } = request;
-  const findedSession = await Sessions.find('_id', session);
-  const findedUser = await Users.find('_id', findedSession.result[0].userId);
+  const { data, userId } = request;
   const note = JSON.parse(data);
-  note.userId = findedUser.result[0].id;
+  note.userId = userId;
   const { result } = await Notes.add(note);
   if (result) {
     return {

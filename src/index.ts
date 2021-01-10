@@ -20,6 +20,6 @@ const notesDatabase = new Storage<TNote>('Note');
 const Notes = new NotesClass(notesDatabase);
 
 const api = createApi(Sessions, Users, Notes);
-const WebController = createWebController(api, Sessions);
+const WebController = createWebController(api, Sessions, Users);
 // eslint-disable-next-line no-unused-vars
 const webServer = createServer(WebController);

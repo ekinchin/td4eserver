@@ -1,8 +1,7 @@
 const unregister = async (request) => {
-  const { data, session } = request;
+  const { data, userId } = request;
   const { username, password } = data ? JSON.parse(data) : undefined;
-  const findedSession = await Sessions.find('_id', session);
-  const findedUser = await Users.find('_id', findedSession.result[0].userId);
+  const findedUser = await Users.find('_id', userId);
   if (username === findedUser.result[0].username && password === findedUser.result[0].password) {
     const deleted = await Users.delete(username);
     const { result } = deleted;
