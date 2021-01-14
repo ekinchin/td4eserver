@@ -12,7 +12,4 @@ const unauth = async (request) => {
   };
 };
 
-// eslint-disable-next-line func-names
-(function () {
-  return unauth;
-}());
+module.exports = unauth;

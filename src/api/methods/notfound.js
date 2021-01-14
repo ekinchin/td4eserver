@@ -8,7 +8,4 @@ const notfound = async (request) => ({
   },
 });
 
-// eslint-disable-next-line func-names
-(function () {
-  return notfound;
-}());
+module.exports = notfound;

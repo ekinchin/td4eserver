@@ -6,7 +6,4 @@ const userlist = async (request) => ({
   data: { users: await Users.find('') },
 });
 
-// eslint-disable-next-line func-names
-(function () {
-  return userlist;
-}());
+module.exports = userlist;

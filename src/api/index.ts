@@ -37,7 +37,9 @@ const apiLoad = (endpointsDeclaration:TEndpointsDeclaration) => {
     console.log(`loading ${name}`);
     const sandbox = vm.createContext(context);
     const source = fs.readFileSync(`${API_DIR}/${name}.js`).toString();
-    const f: TApiMethod = vm.runInContext(source, sandbox);
+    const script = new vm.Script(source);
+    const f: TApiMethod = script.runInContext(sandbox);
+    console.log(`loaded ${f}`);
     // eslint-disable-next-line no-param-reassign
     endpoints[`${name}`] = f;
     return endpoints;
@@ -49,52 +51,52 @@ const createAPi = (Sessions: ISessions, Users: IUser, Notes: INotes) => {
     {
       name: 'userlist',
       context: {
-        require: safeRequire, JSON, console, Sessions, Users,
+        require: safeRequire, JSON, console, Users, module: {},
       },
     }, {
       name: 'auth',
       context: {
-        require: safeRequire, JSON, console, Sessions, Users,
+        require: safeRequire, JSON, console, Sessions, Users, module: {},
       },
     }, {
       name: 'notfound',
       context: {
-        require: safeRequire, JSON, console, Sessions, Users,
+        require: safeRequire, JSON, console, module: {},
       },
     }, {
       name: 'register',
       context: {
-        require: safeRequire, JSON, console, Sessions, Users,
+        require: safeRequire, JSON, console, Users, module: {},
       },
     }, {
       name: 'unregister',
       context: {
-        require: safeRequire, JSON, console, Sessions, Users,
+        require: safeRequire, JSON, console, Users, module: {},
       },
     }, {
       name: 'unauth',
       context: {
-        require: safeRequire, JSON, console, Sessions, Users,
+        require: safeRequire, JSON, console, Sessions, Users, module: {},
       },
     }, {
       name: 'unauthorization',
       context: {
-        require: safeRequire, JSON, console, Sessions, Users,
+        require: safeRequire, JSON, console, module: {},
       },
     }, {
       name: 'getnotes',
       context: {
-        require: safeRequire, JSON, console, Sessions, Users, Notes,
+        require: safeRequire, JSON, console, Notes, module: {},
       },
     }, {
       name: 'createnote',
       context: {
-        require: safeRequire, JSON, console, Sessions, Users, Notes,
+        require: safeRequire, JSON, console, Notes, module: {},
       },
     }, {
       name: 'deletenote',
       context: {
-        require: safeRequire, JSON, console, Sessions, Users, Notes,
+        require: safeRequire, JSON, console, Notes, module: {},
       },
     },
   ];

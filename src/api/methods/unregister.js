@@ -24,7 +24,4 @@ const unregister = async (request) => {
   };
 };
 
-// eslint-disable-next-line func-names
-(function () {
-  return unregister;
-}());
+module.exports = unregister;

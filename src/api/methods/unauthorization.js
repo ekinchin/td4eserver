@@ -6,7 +6,4 @@ const unauthorization = async (request) => ({
   data: { error: 'Unauthorized' },
 });
 
-// eslint-disable-next-line func-names
-(function () {
-  return unauthorization;
-}());
+module.exports = unauthorization;

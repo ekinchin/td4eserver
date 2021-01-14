@@ -13,7 +13,9 @@ const auth = async (request) => {
   const { username, password } = data ? JSON.parse(data) : undefined;
 
   if (session) Sessions.delete(session);
-  const { valid, id } = username && password ? await checkAuthorization(username, password) : { valid: false };
+  const { valid, id } = username && password
+    ? await checkAuthorization(username, password)
+    : { valid: false };
   if (!valid || !username || !password) {
     return {
       status: {
@@ -33,7 +35,4 @@ const auth = async (request) => {
   };
 };
 
-// eslint-disable-next-line func-names
-(function () {
-  return auth;
-}());
+module.exports = auth;
