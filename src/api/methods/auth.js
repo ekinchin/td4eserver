@@ -22,6 +22,9 @@ const auth = async (request) => {
         code: 1,
         message: 'authorization error',
       },
+      data: {
+        error: 'authorization error',
+      },
     };
   }
   const client = await Sessions.add(id);
