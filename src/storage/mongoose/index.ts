@@ -32,7 +32,7 @@ const models: {[index: string]:any} = {
   Note: {
     model: mongoose.model('Note', noteSchema),
     toDTO: (input: any) => ({
-      id: input._id,
+      id: input.id,
       userId: input.userId,
       date: input.date,
       text: input.text,

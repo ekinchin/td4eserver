@@ -12,7 +12,7 @@ export type TUser = {
 }
 
 export type TNote = {
-  id: string,
+  id: number,
   userId: string,
   date: string,
   text: string,

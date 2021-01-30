@@ -77,10 +77,9 @@ const createWebController = (api: TApi, Sessions: ISessions, Users: IUser) => {
     }
     const parsedRequest = parseRequest(request, data);
     const endpointAnswer = await router(parsedRequest);
-    response.statusCode = endpointAnswer.status.code ? 400 : 200;
+    response.statusCode = 200;
     response.setHeader('Content-Type', 'application/json');
     if (endpointAnswer.data) response.write(JSON.stringify(endpointAnswer.data));
-    response.end();
   };
 };
 

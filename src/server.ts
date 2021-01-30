@@ -46,6 +46,15 @@ const createServer = (
   .on('request', (request, response) => {
     let data: string = '';
     request.on('data', (chunk: string) => { data += chunk; });
-    request.on('end', async () => webController(request, response, data));
+    request.on('end', async () => {
+      response.setHeader('Access-Control-Allow-Origin', '*');
+      response.setHeader('Access-Control-Allow-Headers', '*');
+      response.setHeader('Access-Control-Allow-Methods', 'POST');
+      response.setHeader('Control-Allow-Headers', 'Content-Type');
+      if (request.method !== 'OPTIONS') {
+        await webController(request, response, data); // антипаттерн, внутри модифицируется response
+      }
+      response.end();
+    });
   });
 export default createServer;
