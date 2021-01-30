@@ -3,7 +3,7 @@ const checkAuthorization = async (username, password) => Users.find('username', 
     const { result, error } = users;
     if (!result || error) return false;
     const user = result[0];
-    const valid = password === user.password;
+    const valid = hash(password) === user.password;
     const { id } = user;
     return { valid, id };
   });
@@ -11,7 +11,6 @@ const checkAuthorization = async (username, password) => Users.find('username', 
 const auth = async (request) => {
   const { session, data } = request;
   const { username, password } = data ? JSON.parse(data) : undefined;
-
   if (session) Sessions.delete(session);
   const { valid, id } = username && password
     ? await checkAuthorization(username, password)

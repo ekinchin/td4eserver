@@ -12,6 +12,8 @@ import { IUser } from '../interfaces/users';
 // eslint-disable-next-line no-unused-vars
 import { INotes } from '../interfaces/notes';
 
+import createHashFunction from '../lib/hash';
+
 type TEndpointDeclaration = {
   name: string,
   context: Object,
@@ -47,6 +49,8 @@ const apiLoad = (endpointsDeclaration:TEndpointsDeclaration) => {
 };
 
 const createAPi = (Sessions: ISessions, Users: IUser, Notes: INotes) => {
+  const hash = createHashFunction('sha256', 'hex');
+
   const endpointsDeclaration = [
     {
       name: 'userlist',
@@ -56,7 +60,7 @@ const createAPi = (Sessions: ISessions, Users: IUser, Notes: INotes) => {
     }, {
       name: 'auth',
       context: {
-        require: safeRequire, JSON, console, Sessions, Users, module: {},
+        require: safeRequire, JSON, console, Sessions, Users, module: {}, hash,
       },
     }, {
       name: 'notfound',
@@ -66,12 +70,12 @@ const createAPi = (Sessions: ISessions, Users: IUser, Notes: INotes) => {
     }, {
       name: 'register',
       context: {
-        require: safeRequire, JSON, console, Users, module: {},
+        require: safeRequire, JSON, console, Users, module: {}, hash,
       },
     }, {
       name: 'unregister',
       context: {
-        require: safeRequire, JSON, console, Users, module: {},
+        require: safeRequire, JSON, console, Users, module: {}, hash,
       },
     }, {
       name: 'unauth',

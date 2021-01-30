@@ -5,7 +5,6 @@ RUN apk add g++ make python
 COPY package* ./
 RUN npm ci
 COPY . ./
-RUN npm update caniuse-lite browserslist
 RUN npm run build
 
 FROM node:14-alpine
@@ -13,6 +12,6 @@ WORKDIR /app
 #!/bin/sh
 # Copy from the stahg 1
 COPY --from=builder /app/build /app
-COPY --from=builder /app/src/api/methods /app/src/api
+COPY --from=builder /app/src/api/methods /app/build/api
 EXPOSE 8000
 CMD ["node", "index.js"]

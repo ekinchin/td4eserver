@@ -42,7 +42,7 @@ const register = async (request) => {
       data: { error: 'user already exists' },
     };
   }
-  const user = await Users.add(username, password);
+  const user = await Users.add(username, hash(password));
   return {
     status: {
       code: 0,
