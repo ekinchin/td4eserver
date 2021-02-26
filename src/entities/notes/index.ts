@@ -25,7 +25,7 @@ class NotesClass implements INotes {
   }
 
   async delete(id: string): Promise<{ result?: TNote, error?: TError}> {
-    const { result, error } = await this.storage.delete('_id', id);
+    const { result, error } = await this.storage.delete('id', id);
     return { result, error };
   }
 }

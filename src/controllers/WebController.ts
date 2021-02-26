@@ -12,6 +12,7 @@ const API_PREFIX = '/api/';
 
 const createWebController = (api: TApi, Sessions: ISessions, Users: IUser) => {
   const checkSession = async (id: string): Promise<boolean> => {
+    if (id === 'null') return false;
     const sessions = await Sessions.find('_id', id);
     if (!sessions.result) return false;
     const session = sessions.result[0];
